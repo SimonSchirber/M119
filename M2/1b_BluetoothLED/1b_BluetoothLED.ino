@@ -1,90 +1,78 @@
 #include <ArduinoBLE.h>
-
 long previousMillis = 0;
 int interval = 0;
 int ledState = LOW;
 
-BLEService ledService("180A"); // BLE LED Service
-
-// BLE LED Switch Characteristic - custom 128-bit UUID, read and writable by central
-BLEByteCharacteristic switchCharacteristic("2A57", BLERead | BLEWrite);
+//Device information
+BLEService myledService("180A"); 
+// Read and writeable by a central client
+BLEByteCharacteristic myswitchCharacteristic("2A57", BLERead | BLEWrite);
 
 void setup() {
   Serial.begin(9600);
+  //wait until serial montitor to initiate
   while (!Serial);
-
-  // set built in LED pin to output mode
   pinMode(LED_BUILTIN, OUTPUT);
-
-  // begin initialization
+  // Start BLE, loop until it has begun
   if (!BLE.begin()) {
     Serial.println("starting Bluetooth® Low Energy failed!");
-
     while (1);
   }
-
-  // set advertised local name and service UUID:
-  BLE.setLocalName("Nano 33 IoT");
-  BLE.setAdvertisedService(ledService);
-
-  // add the characteristic to the service
-  ledService.addCharacteristic(switchCharacteristic);
-
-  // add service
-  BLE.addService(ledService);
-
-  // set the initial value for the characteristic:
-  switchCharacteristic.writeValue(0);
-
-  // start advertising
+  //Show Advertised Name and service that its offering
+  BLE.setLocalName("Simon IoT");
+  BLE.setAdvertisedService(myledService);
+  // add characteristic to the service
+  myledService.addCharacteristic(myswitchCharacteristic);
+  BLE.addService(myledService);
+  // set initial value for  characteristic
+  myswitchCharacteristic.writeValue(0);
+  // advertise service/charecteristic
   BLE.advertise();
-
-  Serial.println("BLE LED Peripheral");
 }
 
 void loop() {
   // listen for BLE peripherals to connect:
   BLEDevice central = BLE.central();
-
   // if a central is connected to peripheral:
   if (central) {
     Serial.print("Connected to central: ");
-    // print the central's MAC address:
+    //print MAC 
     Serial.println(central.address());
-
-    // while the central is still connected to peripheral:
+    // while the central connected to peripheral:
     while (central.connected()) {
-      // if the remote device wrote to the characteristic,
-      // use the value to control the LED:
-      if (switchCharacteristic.written()) {
-        switch (switchCharacteristic.value()) {   // any value other than 0
+      if (myswitchCharacteristic.written()) {
+        switch (myswitchCharacteristic.value()) {   
           case 01:
+            //Turn on 
             Serial.println("LED on");
-            digitalWrite(LED_BUILTIN, HIGH);            // will turn the LED on
+            digitalWrite(LED_BUILTIN, HIGH);            
             break;
           case 02:
+              //Blink Fast
               Serial.println("LED fast blink");
-              digitalWrite(LED_BUILTIN, HIGH);         // will turn the LED on
+              digitalWrite(LED_BUILTIN, HIGH);         
               delay(500);
-              digitalWrite(LED_BUILTIN, LOW);         // will turn the LED off
+              digitalWrite(LED_BUILTIN, LOW);         
               delay(500);
-              digitalWrite(LED_BUILTIN, HIGH);      // will turn the LED on
+              digitalWrite(LED_BUILTIN, HIGH);      
               delay(500);
-              digitalWrite(LED_BUILTIN, LOW);       // will turn the LED off
+              digitalWrite(LED_BUILTIN, LOW);       
             break;
           case 03:
+            //Blink slow
             Serial.println("LED slow blink");
-            digitalWrite(LED_BUILTIN, HIGH);         // will turn the LED on
+            digitalWrite(LED_BUILTIN, HIGH);         
               delay(1000);
-              digitalWrite(LED_BUILTIN, LOW);         // will turn the LED off
+              digitalWrite(LED_BUILTIN, LOW);         
               delay(1000);
-              digitalWrite(LED_BUILTIN, HIGH);      // will turn the LED on
+              digitalWrite(LED_BUILTIN, HIGH);      
               delay(1000);
-              digitalWrite(LED_BUILTIN, LOW);       // will turn the LED off
+              digitalWrite(LED_BUILTIN, LOW);       
             break;
           default:
+            //Off by Default
             Serial.println(F("LED off"));
-            digitalWrite(LED_BUILTIN, LOW);          // will turn the LED off
+            digitalWrite(LED_BUILTIN, LOW);          
             break;
         }
       }
