@@ -1,6 +1,5 @@
 #include <WiFiNINA.h>
-#include "Secrets.h"
-  
+#include "Secrets.h"  
 
 int status = WL_IDLE_STATUS;             
 int ledState = LOW;                       
