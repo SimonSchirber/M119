@@ -1,0 +1,12 @@
+.center{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    background-color:#081620;
+  }
+
+.myPlot{
+    width:100%;
+    max-width:1000px
+}
