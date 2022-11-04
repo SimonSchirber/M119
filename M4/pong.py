@@ -21,8 +21,6 @@ SCORE_FONT = pygame.font.SysFont("comicsans", 50)
 class Paddle:
     PADDLE_COLOR = WHITE
     VEL = 10
-
-
     def __init__(self, x, y, width, height):
         self.x = self.original_x = x
         self.y = self.original_y = y
