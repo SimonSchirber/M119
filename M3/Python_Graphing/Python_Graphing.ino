@@ -1,6 +1,4 @@
 #include <ArduinoBLE.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
 #include <Arduino_LSM6DS3.h>
 
 //Device information

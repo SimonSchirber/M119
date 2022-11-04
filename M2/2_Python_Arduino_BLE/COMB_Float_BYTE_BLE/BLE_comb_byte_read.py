@@ -15,8 +15,7 @@ def print3dec(floatname, floatvalue):
 
 async def readBLEvalues(address):
     global myBLEchar
-    async with BleakClient(address) as client:
-        
+    async with BleakClient(address) as client:    
         for service in client.services:
             for char in service.characteristics:
                 if (("read" in char.properties) and ("write" in char.properties)):
