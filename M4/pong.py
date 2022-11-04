@@ -5,7 +5,6 @@ import asyncio
 import struct
 from bleak import BleakClient
 
-
 pygame.init()
 WIDTH, HEIGHT = 1000, 500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -27,16 +26,13 @@ p1_paired = False
 char_1 = 0
 service_1 = 0
 
-ADDRESS_P2 = ("")
-char_2 = 0
-service_2 = 0
-
 def byteToFloat(floatname, floatvalue):
     #use struct to convert byte to float in c notation
     [floatvalue] = struct.unpack('f', floatvalue)
     #print to 3 decimals the value of the float
     print(f'{floatname} :{floatvalue:.2f}')
     return floatvalue
+
 async def test(client):
     print("client called")
     comb_byte_array = await client.read_gatt_char(char_1.uuid)
