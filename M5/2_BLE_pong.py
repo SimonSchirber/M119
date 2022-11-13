@@ -21,10 +21,15 @@ WINNING_SCORE = 10
 SCORE_FONT = pygame.font.SysFont("comicsans", 50)
 
 ##########BLE Connections###########
-ADDRESS_P1 = ("58:BF:25:9B:35:52")
+ADDRESS_P1 = ("78:BF:25:9B:35:52")
 p1_paired = False
 char_1 = 0
 service_1 = 0
+
+ADDRESS_P2 = ("78:BF:25:9B:35:52")
+p2_paired = False
+char_2 = 0
+service_2 = 0
 
 def byteToFloat(floatname, floatvalue):
     #use struct to convert byte to float in c notation
@@ -39,8 +44,8 @@ async def test(client):
     float1 = comb_byte_array[0:4]
     byteToFloat("Ay", float1)
 
-async def startBLE(address1):
-    global char_1, service_1
+async def startBLE(address1, address2):
+    global char_1, service_1, char_2, service_2
     async with BleakClient(address1) as client1:    
         for service in client1.services:   
             for char in service.characteristics:
@@ -57,7 +62,14 @@ async def startBLE(address1):
                     #     except:
                     #         continue
                     #     time.sleep(.1)
-        await main(client1)
+        async with BleakClient(address2) as client2:  
+            for service in client2.services:   
+                for char in service.characteristics:
+                    if (("read" in char.properties) and ("write" in char.properties)):
+                        print("Connected To Player 2")
+                        char_2 = char
+                        service_2 = service   
+            await main(client1, client2)
 
 class Paddle:
     PADDLE_COLOR = WHITE
@@ -166,7 +178,7 @@ def render(win, paddles, ball, right_score, left_score):
     ball.draw(win)
     pygame.display.update()
 
-async def main(client1):
+async def main(client1, client2):
     run = True
     clock = pygame.time.Clock()
     #Declare Paddles
@@ -179,11 +191,16 @@ async def main(client1):
     p1_count = 0
     p1_read_frame = 15
     vel_p1 = 0
+
+    p2_count = 0
+    p2_read_frame = 40
+    vel_p2 = 0
     #Main loop that runs during game
     while run:
         #Max FPS
         clock.tick(FPS)
-        #Only read BLE every 5 frames
+        
+        ######Read BLE Devices######
         if p1_count == p1_read_frame:
             comb_byte_array = await client1.read_gatt_char(char_1.uuid)
             vel_p1 = comb_byte_array[0:4]
@@ -192,6 +209,14 @@ async def main(client1):
         else:
             p1_count += 1
 
+        if p2_count == p2_read_frame:
+            comb_byte_array = await client2.read_gatt_char(char_2.uuid)
+            vel_p2 = comb_byte_array[0:4]
+            vel_p2 = byteToFloat("P2: Ay", vel_p2)
+            p2_count = 0
+        else:
+            p2_count += 1
+        ####Render Frame
         render(WIN, [left_paddle, right_paddle], ball, right_score, left_score)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -233,6 +258,6 @@ async def main(client1):
     pygame.quit()
 
 if __name__ == '__main__':
-    asyncio.run(startBLE(ADDRESS_P1))
+    asyncio.run(startBLE(ADDRESS_P1, ADDRESS_P2))
     
 

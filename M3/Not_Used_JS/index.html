@@ -9,21 +9,25 @@
     </head>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <body>
-        <div id="myPlot"></div>
-        <div id="myotherPlot" style="width:100%;max-width:700px"></div>
-        <script>
-            var xArray = [50,60,70,80,90,100,110,120,130,140,150];
-            var yArray = [7,8,8,9,9,9,10,11,14,14,15];
-            // Define Data
-            var data = [{x: xArray,y: yArray,mode:"lines"}];
-            // Define Layout
-            var layout = {
-            xaxis: {range: [40, 160], title: "Square Meters"},
-            yaxis: {range: [5, 16], title: "Price in Millions"},  
-            title: "House Prices vs. Size"};
-            // Display using Plotly
-            Plotly.newPlot("myPlot", data, layout);
-            Plotly.newPlot("myotherPlot", data, layout);
-        </script>
+        <div id = "Weekly_Trends_Main" class = "center">
+            <div id="20lbPlot" style="width:500%;"></div>
+            <div id="30lbPlot" style="width:500%;"></div>
+            <div id="lungesPlot" style="width:500%;"></div>
+            <div id="30lbPlot" style="width:500%;"></div>
+            <script>
+                var xArray = [50,60,70,80,90,100,110,120,130,140,150];
+                var yArray = [7,8,8,9,9,9,10,11,14,14,15];
+                // Define Data
+                var data = [{x: xArray,y: yArray,mode:"lines"}];
+                // Define Layout
+                var layout = {
+                xaxis: {range: [40, 160], title: "Square Meters"},
+                yaxis: {range: [5, 16], title: "Price in Millions"},  
+                title: "House Prices vs. Size"};
+                // Display using Plotly
+                Plotly.newPlot("20lbPlot", data, layout);
+                Plotly.newPlot("30lbPlot", data, layout);
+            </script>
+        </div>
     </body>
 </html>
