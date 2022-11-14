@@ -5,7 +5,7 @@ from bleak import BleakClient
 
 logger = logging.getLogger(__name__)
 ###Add Device address from scan
-ADDRESS = ("58:BF:25:9B:35:52")
+ADDRESS = ("CF:DB:B6:15:63:35")
 
 async def main(address):
     async with BleakClient(address) as client:

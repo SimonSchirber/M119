@@ -21,12 +21,12 @@ WINNING_SCORE = 10
 SCORE_FONT = pygame.font.SysFont("comicsans", 50)
 
 ##########BLE Connections###########
-ADDRESS_P1 = ("78:BF:25:9B:35:52")
+ADDRESS_P1 = ("58:BF:25:9B:35:52")
 p1_paired = False
 char_1 = 0
 service_1 = 0
 
-ADDRESS_P2 = ("78:BF:25:9B:35:52")
+ADDRESS_P2 = ("CF:DB:B6:15:63:35")
 p2_paired = False
 char_2 = 0
 service_2 = 0
@@ -148,17 +148,22 @@ def handle_collision(ball, left_paddle, right_paddle):
                 y_vel = diff_y / reduction_factor
                 ball.y_vel = -y_vel
 
-def handle_paddle_movement(keys, vel_1, left_paddle, right_paddle):
-    #left paddle
-    if keys[pygame.K_w] and (left_paddle.y - left_paddle.VEL >= 0):
-        left_paddle.move(up = True)
-    if keys[pygame.K_s] and (left_paddle.y + left_paddle.VEL + left_paddle.height <= HEIGHT):
-        left_paddle.move(up = False)
+def handle_paddle_movement(vel_1, vel_2, left_paddle, right_paddle):
+    # #left paddle
+    # if keys[pygame.K_w] and (left_paddle.y - left_paddle.VEL >= 0):
+    #     left_paddle.move(up = True)
+    # if keys[pygame.K_s] and (left_paddle.y + left_paddle.VEL + left_paddle.height <= HEIGHT):
+    #     left_paddle.move(up = False)
     #Player 1: right paddle 
     if (vel_1 > 0) and (right_paddle.y - right_paddle.VEL >= 0):
         right_paddle.move( multiplier = vel_1)
     if (vel_1 < 0) and (right_paddle.y + right_paddle.VEL + right_paddle.height <= HEIGHT):
         right_paddle.move( multiplier = vel_1)
+    #Player 1: right paddle 
+    if (vel_2 > 0) and (left_paddle.y - left_paddle.VEL >= 0):
+        left_paddle.move( multiplier = vel_2)
+    if (vel_2 < 0) and (left_paddle.y + left_paddle.VEL + left_paddle.height <= HEIGHT):
+        left_paddle.move( multiplier = vel_2)
     
 def render(win, paddles, ball, right_score, left_score):
     WIN.fill(BLACK)
@@ -193,7 +198,7 @@ async def main(client1, client2):
     vel_p1 = 0
 
     p2_count = 0
-    p2_read_frame = 40
+    p2_read_frame = 15
     vel_p2 = 0
     #Main loop that runs during game
     while run:
@@ -223,7 +228,7 @@ async def main(client1, client2):
                 run = False
                 break
             keys = pygame.key.get_pressed()
-        handle_paddle_movement(keys, vel_p1, left_paddle, right_paddle)
+        handle_paddle_movement(vel_p1, vel_p2, left_paddle, right_paddle)
         ball.move()
         handle_collision(ball, left_paddle, right_paddle)
         if ball.x < 0:

@@ -1,8 +1,7 @@
 #include <Arduino_LSM6DS3.h>
 #include <ArduinoBLE.h>
-
-
 BLEService myledService("58:BF:25:9B:35:52"); 
+
 // Read and writeable by a central client. Each float is 4 bytes. (6 values = 24 bytes total to send)
 BLECharacteristic myswitchCharacteristic("19B10000-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite, 4);
 
@@ -34,7 +33,7 @@ void setup() {
     while (1);
   }
   //Show Advertised Name and service that its offering
-  BLE.setLocalName("Simon IoT");
+  BLE.setLocalName("Simon P1");
   BLE.setAdvertisedService(myledService);
   // add characteristic to the service
   myledService.addCharacteristic(myswitchCharacteristic);
