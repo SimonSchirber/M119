@@ -1,11 +1,15 @@
-#M5
+# M5
 
-2 Player pong:
-- Load Right player BLE arduino device first
-- Load Left Player Second
-- Start pong game and wait to connect
+## 2 Player BLE pong:
+- Load Right player BLE arduino device first into nano 33 Iot (Player_1.ino)
+- Load Left Player Second into Nicla Sense me board  (Player_2_states.ino)
+- Start pong game python script ("2_BLE_Pong.py") and wait to connect to devices (takes ~10 seconds)
 
-For this pong BLE I only used the Ay measurment. Essentially since graivty is to a readin of 1, you can use this to see flat, and tilted in one direction and another with a range of -1 to 1 for a 180  degree turn
+## Player 1 (33 Iot)
+Moves in continuos motion by "roling" the 33 Iot around when holding the breacboard 90 degreess to the cord
 
-Transfer function of poistion Y of paddle for BLE paddle
-    Yt = Yt-1 + Ay * Y_Sesitivity_constant
+## Player 2 (Nicla sesne)
+3 states possible when holding the board parallel with the wire like flipping a pan
+Flip up (move character up, point/flip upward)
+Steady/Flat (stay still, hold bord level)
+FLip down (move character up, point/flip downward)
